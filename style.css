@@ -1,0 +1,33 @@
+body {
+    font-family: sans-serif;
+}
+
+.input-container {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+#reminderTime {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+#toggleReminders {
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.listItem {
+    margin-bottom: 5px;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+.checked {
+    text-decoration: line-through;
+    font-size: 75%;
+}
