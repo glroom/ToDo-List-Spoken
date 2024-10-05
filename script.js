@@ -26,28 +26,56 @@ toggleRemindersButton.addEventListener("click", () => {
 });
 
 reminderTimeInput.oninput =  function(e){
-    if(e.inputType !="insertText" || !isNaN(parseInt(e.data))){
-        console.log(e.data);
-        return;}
+     console.log(e);
+    if(e.inputType != "insertText" || !isNaN(parseInt(e.data))){
+        return;
+    }
+    console.log(e.inputType);
     
     const selection = window.getSelection();
     const range = selection.getRangeAt(0); // Get the current selection range
     // Store the current caret position relative to the start of the selection
-    const caretOffset = range.startOffset;
+    let caretOffset = range.startOffset;
     // Replace the text content of the span
     this.textContent = this.textContent.slice(0,this.textContent.length-1);
     // Restore the caret position
     const newRange = document.createRange();
+    //if(this.textContent.length == 0){
+        //this.textContent = ' '
+        //caretOffset = 2;
+   // }
+    
     newRange.setStart(this.childNodes[0], caretOffset-1);
     newRange.collapse(true);
     selection.removeAllRanges();
     selection.addRange(newRange);
-}
+};
 
-listContainer.onclick = function(event){
+reminderTimeInput.onblur = function(){if(this.textContent.length ==0){this.textContent = "1"}};
 
+listContainer.onclick = function(e){
+    if(e.target.classList.contains("listCheck") 
+       && !e.target.parentElement.classList.contains("empty") 
+       && e.target.parentElement.querySelector(".listText").textContent != ''){
+        //if click the box and listItem not .empty and listText content not empty string
+        
+        e.target.parentElement.classList.contains("checked")?
+        e.target.parentElement.classList.remove("checked"):
+        e.target.parentElement.classList.add("checked");
+        //is listItem .checked? if so remove checked or else add checked.
+        
+    }
+    console.log(e.target.parentElement);
     
 }
+
+listContainer.addEventListener("keydown", (e) => {
+    console.log(e)
+        if(e.key == "Enter" && !e.shiftKey){e.preventDefault();
+            if(e.target.parentElement == listContainer.children[listContainer.childElementCount-2]){
+                listContainer.lastChild.querySelector(".listText").focus();}
+            }
+});
 
 function readToDoItems() {
     const items = listContainer.querySelectorAll(".listItem");
@@ -76,10 +104,18 @@ function shuffleArray(array) {
 
 function addNewEmptyItem() {
     const newItem = document.createElement("div");
-    newItem.classList.add("listItem", "empty");
-    newItem.contentEditable = true;
-    newItem.spellcheck = false;
     listContainer.appendChild(newItem);
+    
+    newItem.outerHTML = 
+        `<div class="listItem empty">
+            <div class="listCheck"></div>
+            <div class="listText" contenteditable="true" spellcheck="false"></div>
+        </div>`;
+    
+    //newItem.classList.add("listItem", "empty");
+    //newItem.contentEditable = true;
+    //newItem.spellcheck = false;
+    
 }
 
 // MutationObserver to detect changes in the empty list item

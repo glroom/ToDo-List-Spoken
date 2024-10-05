@@ -6,52 +6,81 @@ body {
     min-height: 100vh; /* Ensure the body takes up at least the full viewport height */
     margin: 0; /* Remove default body margin */
     align-items: flex-start;
+    box-sizing: border-box;
+    background-color:hsl(0deg 0% 8.89%);
+    color: #d0d0d0;
 }
 
 .input-container {
     display: flex;
     margin-bottom: 1em;
+    max-height: 2em;
+    justify-content: flex-start;
+    align-content: stretch;
+    flex-direction: row;
+    flex-wrap: wrap;
+    background-color: #161616;
+    padding: 3px;
 }
 
 .input-container div,span,button{
     font-size: inherit;
     padding: 10px;
-    border: 2px solid #ccc;
+    border: 2px solid #000000;
     margin-right: 1em;
-    
+    max-height: 2em;
+    min-width: 6em;
+    display: inline-flex;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: row;
+    background-color: #262626;
 }
 
-*:not(button):focus{
-    box-shadow: 0px 0px 8px  #006eff57;
-    outline:none;
+.input-container div:hover, button:hover, .listItem:hover{
+    box-shadow:#7fffd482 0px 1px 4px;
+    z-index: 4 !important; 
+    opacity: 100% !important;
 }
 
-#reminderTime:not(:empty):after {
+div {
+    position:  relative
+}
+
+#reminderTime:not(:empty):after, #reminderTime:empty:focus:after {
     content: " minutes";
     opacity: 50%;
     font-size: small;
     font-style: italic;
+    padding: 5px;
 }
 
-#reminderTime:empty:before {
-    content: "MINUTES";
+#reminderTime:empty:after {
+    content: " MINUTES";
+    opacity: 100%;
     font-size: medium;
     font-style: italic;
-    font-weight:bolder;
-    flex-grow:0;
+    padding: 0px;
 }
 
 #reminderTime:empty{
-    background-color:red;
+    background-color:#bf1515;
     color:white;
-    padding:10px;
+    padding:5px;
     
 }
 
+#reminderTime:empty:focus{
+    background-color:#ffae22;
+    color: #000000;
+
+}
+
 #toggleReminders {
-    background-color: #4CAF50;
+    background-color: #2a612d;
     color: white;
-    border: none;
+    /* border: none; */
     cursor: pointer;
 }
 
@@ -59,61 +88,98 @@ body {
     background-color: hsl(30.52deg 79.04% 54.59%);
 }
 
+.listItem.checked{
+    opacity:100;
+    color:#575757;
+    border: 1px dashed #000000e0;
+    margin: -1px 0px -1px 1em;
+    padding: 2px;
+    translate: 0 1px;
+    background-color:#1a1a1a;
+    z-index:0;
+}
 
-.checked {
+.checked > .listCheck{
+    background-color: #505050;
+    box-shadow: none;
+    scale: 75%;
+}
+
+.checked > .listText{
     text-decoration: line-through;
-    font-size: 75%;
+    font-style:italic;
+    padding: 0px 0.5em;
 }
 
 .listItem{
-    margin-bottom: 5px;
+    margin: 2px 0px 0px 0px;
     /* padding: 5px; */
-    border: 2px solid black;
-    justify-content: flex-start;
+    border: 2px solid #000000;
+    background-color:#272727;
     display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-content: center;
     align-items: center;
+    justify-content: center;
+    transition: margin 0.1s 0.1s linear, box-shadow .1s  linear;
+    z-index:2;
 }
 
-.listItem.empty > div{
+ .listText:focus {
+    outline:none;
+    opacity: 100%;
+}
+
+.listItem.empty, .listItem:has(.listText:empty){
     opacity: 50%;
     font-style: italic;
 }
 
-.listItem.empty:focus-within{
-    border: 2px solid black;
-    opacity: 100%;
-}
-.listItem.empty{
-   opacity: 60%;
+.listItem.empty > .listCheck, .listItem:has(.listText:empty) > .listCheck{
+    scale:75%
+    
 }
 
 .listText:empty:before{
     content: "stuff";
+    opacity: 50%;
+    font-style: italic;
+}
+
+.listItem:focus-within, .listItem.empty:focus-within, listItem:has(.listText:empty):focus-within{
+    opacity: 100% !important;
+    z-index: 100;
+    border: solid 2px #ffffff24;
 }
 
 .listText{
-    display:inline-block;
+    display: flex;
     padding: 0.5em;
     width: 100%;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.listItem:not(:has(.listText:empty)) > div.listCheck:hover{
+    background-color:#7fffd4;
+}
+
+.listItem:not(:has(.listText:empty)) > div.listCheck:active{
+    box-shadow: 0px 0px 20px #7fffd4;
+    background-color:#000000;
+    
 }
 
 .listCheck{
-    width: 1em;
-    height: 1em;
-    /* background-color:green; */
+    width: .75em;
+    height: .75em;
+    background-color:#00000000;
     display: inline-block;
     margin-left: 0.5em;
-    border: black 2px solid;
+    border: #000000 2px solid;
     flex-shrink: 0;
+    box-shadow: 0px 0px 3px #000000 ;
+    transition: background-color 0.1s linear;
 }
-
-
-
-
-
 
 .container {
     /* Add styles for the container div */
