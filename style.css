@@ -11,6 +11,8 @@ body {
     color: #d0d0d0;
 }
 
+
+
 .input-container {
     display: flex;
     margin-bottom: 1em;
@@ -23,7 +25,7 @@ body {
     padding: 3px;
 }
 
-.input-container div,span,button{
+.input-container div,button{
     font-size: inherit;
     padding: 10px;
     border: 2px solid #000000;
@@ -38,14 +40,24 @@ body {
     background-color: #262626;
 }
 
-.input-container div:hover, button:hover, .listItem:hover{
-    box-shadow:#7fffd482 0px 1px 4px;
+.init.empty{
+    opacity:0% !important;
+}
+
+.input-container div:hover, .input-container div:focus, button:hover, .listItem:focus-within, .listItem:hover{
+    /*box-shadow:#7fffd482 0px 1px 4px;*/
+    border-left-color: #7fffd485;
     z-index: 4 !important; 
     opacity: 100% !important;
 }
 
 div {
-    position:  relative
+    position:  relative;
+}
+
+#reminderTime:active, #toggleReminders:active, .listItem:active {
+    box-shadow:#7fffd482 0px 1px 4px;
+
 }
 
 #reminderTime:not(:empty):after, #reminderTime:empty:focus:after {
@@ -71,6 +83,10 @@ div {
     
 }
 
+#reminderTime:focus{
+    outline: none;
+}
+
 #reminderTime:empty:focus{
     background-color:#ffae22;
     color: #000000;
@@ -89,7 +105,7 @@ div {
 }
 
 .listItem.checked{
-    opacity:100;
+    opacity:100%;
     color:#575757;
     border: 1px dashed #000000e0;
     margin: -1px 0px -1px 1em;
@@ -106,7 +122,7 @@ div {
 }
 
 .checked > .listText{
-    text-decoration: line-through;
+    text-decoration: line-through wavy 1px #656565e6;
     font-style:italic;
     padding: 0px 0.5em;
 }
@@ -117,10 +133,14 @@ div {
     border: 2px solid #000000;
     background-color:#272727;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: margin 0.1s 0.1s linear, box-shadow .1s  linear;
+    transition: margin 0.1s linear, text-shadow 1s 0s linear(0.0 0%, 0.27 10.54%, 1 14.27%, 1.12 65.35%, 1.18 106.02%), max-height 0.2s ease-out, opacity 0.2s cubic-bezier(0.4, 0, 1, 1);
     z-index:2;
+    justify-items: stretch;
+    align-items: center;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    max-height: 250px;
+    box-sizing: border-box;
 }
 
  .listText:focus {
@@ -144,23 +164,28 @@ div {
     font-style: italic;
 }
 
-.listItem:focus-within, .listItem.empty:focus-within, listItem:has(.listText:empty):focus-within{
+.listItem:focus-within{
     opacity: 100% !important;
     z-index: 100;
-    border: solid 2px #ffffff24;
+    border-left-color: #7fffd485;
 }
 
 .listText{
-    display: flex;
+    display: inline;
     padding: 0.5em;
     width: 100%;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
+    overflow-wrap: anywhere;
+    animation: text-decoration 0.9s linear;
 }
 
 .listItem:not(:has(.listText:empty)) > div.listCheck:hover{
     background-color:#7fffd4;
+    cursor:pointer;
+}
+
+.listItem:not(.checked):has(div.listCheck:hover){
+     text-shadow:0px 0px 4px #7fffd4;
+    
 }
 
 .listItem:not(:has(.listText:empty)) > div.listCheck:active{
@@ -173,13 +198,59 @@ div {
     width: .75em;
     height: .75em;
     background-color:#00000000;
-    display: inline-block;
+    display: flex;
     margin-left: 0.5em;
     border: #000000 2px solid;
     flex-shrink: 0;
-    box-shadow: 0px 0px 3px #000000 ;
+    box-shadow: 0px 0px 3px #000000;
     transition: background-color 0.1s linear;
 }
+
+.listX {
+    padding: 1px;
+    margin: 0px 1px 0px 0px;
+    color: black;
+    height: max-content;
+    display: block;
+}
+
+.listX:hover {
+    opacity: 100%;
+    cursor:pointer;
+    text-shadow:0px 0px 4px #7fffd4;
+    color: white;
+}
+
+.listInfo:empty{
+    padding: 0px;
+    margin: 0px;
+    max-width: 0px;
+    overflow-wrap: anywhere;
+    font-size:small;
+    
+}
+
+.listInfo{
+    font-size: 9pt;
+    margin: 0px 2px 0px 0px;
+    width: max-content;
+    height: max-content;
+    text-wrap: nowrap;
+    display: block;
+    color:#515151
+}
+
+.listEnd{
+    display: flex;
+    height: inherit;
+    padding: 2px;
+    align-self: stretch;
+    align-items: flex-end;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 5%;
+}
+
 
 .container {
     /* Add styles for the container div */
@@ -188,3 +259,5 @@ div {
     margin: 2em;
     margin-top: 0;
 }
+
+

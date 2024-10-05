@@ -54,18 +54,33 @@ reminderTimeInput.oninput =  function(e){
 reminderTimeInput.onblur = function(){if(this.textContent.length ==0){this.textContent = "1"}};
 
 listContainer.onclick = function(e){
+    console.log(e);
+    const listItem = e.target.closest(".listItem"); //get the listItem div
+    
     if(e.target.classList.contains("listCheck") 
-       && !e.target.parentElement.classList.contains("empty") 
-       && e.target.parentElement.querySelector(".listText").textContent != ''){
+        && !listItem.classList.contains("empty") 
+        && listItem.querySelector(".listText").textContent != ''){
         //if click the box and listItem not .empty and listText content not empty string
         
-        e.target.parentElement.classList.contains("checked")?
-        e.target.parentElement.classList.remove("checked"):
-        e.target.parentElement.classList.add("checked");
+        listItem.classList.contains("checked")?
+        listItem.classList.remove("checked"):
+        listItem.classList.add("checked");
         //is listItem .checked? if so remove checked or else add checked.
+        listItem.querySelector(".listInfo").textContent = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        //add the time to listInfo
+    }
+        
+    else if(e.target.classList.contains("listX") && listItem != listContainer.lastChild){
+        listItem.style.border = "none";
+        listItem.style.margin = "0px";
+        listItem.style.maxHeight = "0px";
+        listItem.style.opacity = "0%";
+        setTimeout((e)=>{
+           e.remove();
+            
+        },200,listItem);
         
     }
-    console.log(e.target.parentElement);
     
 }
 
@@ -104,18 +119,23 @@ function shuffleArray(array) {
 
 function addNewEmptyItem() {
     const newItem = document.createElement("div");
+    
     listContainer.appendChild(newItem);
     
     newItem.outerHTML = 
-        `<div class="listItem empty">
-            <div class="listCheck"></div>
-            <div class="listText" contenteditable="true" spellcheck="false"></div>
+        `<div class="listItem empty init">
+            <div class ="listCheck"></div>
+            <div class ="listText" contenteditable="true" spellcheck="false"></div>
+            <div class="listEnd">
+                <div class ="listX">X</div>
+                <div class ="listInfo"></div>
+            </div>
         </div>`;
+
+    setTimeout(e=>listContainer.lastChild.classList.remove("init"),10);
     
-    //newItem.classList.add("listItem", "empty");
-    //newItem.contentEditable = true;
-    //newItem.spellcheck = false;
     
+
 }
 
 // MutationObserver to detect changes in the empty list item
