@@ -2,9 +2,10 @@ const reminderTimeInput = document.getElementById("reminderTime");
 const toggleRemindersButton = document.getElementById("toggleReminders");
 const listContainer = document.getElementById("listContainer");
 
+let voices;
 let remindersInterval;
 let speechUtterance = new SpeechSynthesisUtterance();
-speechUtterance.voice = speechSynthesis.getVoices()[84];
+
 
 toggleRemindersButton.addEventListener("click", () => {
     if (remindersInterval) {
@@ -26,12 +27,9 @@ toggleRemindersButton.addEventListener("click", () => {
 });
 
 reminderTimeInput.oninput =  function(e){
-     console.log(e);
     if(e.inputType != "insertText" || !isNaN(parseInt(e.data))){
         return;
     }
-    console.log(e.inputType);
-    
     const selection = window.getSelection();
     const range = selection.getRangeAt(0); // Get the current selection range
     // Store the current caret position relative to the start of the selection
@@ -85,18 +83,32 @@ listContainer.onclick = function(e){
 }
 
 listContainer.addEventListener("keydown", (e) => {
-    console.log(e)
         if(e.key == "Enter" && !e.shiftKey){e.preventDefault();
             if(e.target.parentElement == listContainer.children[listContainer.childElementCount-2]){
                 listContainer.lastChild.querySelector(".listText").focus();}
             }
 });
 
+function dv(array){
+        if(array.length == 0){
+            return;
+        }
+        speechUtterance.voice = voices[Math.floor(Math.random()*voices.length)];
+        console.log(speechUtterance.voice.name);
+        speechUtterance.text = array.pop().querySelector(".listText").textContent;
+        speechUtterance.onend = function(){dv(array)};
+        speechSynthesis.speak(speechUtterance);
+    }
+
 function readToDoItems() {
+    if(voices.length == 0){
+        voices = speechSynthesis.getVoices().filter(item => item.lang.includes("en-"));
+    }
     const items = listContainer.querySelectorAll(".listItem");
     const itemsArray = Array.from(items);
     const emptyItem = itemsArray.pop(); // Remove the empty item from shuffling
-
+    
+    
     shuffleArray(itemsArray); // Shuffle the remaining items
 
     // Reorder the list items in the DOM
@@ -105,8 +117,9 @@ function readToDoItems() {
 
     // Read only the non-checked items
     const itemsToRead = itemsArray.filter(item => !item.classList.contains("checked"));
-    speechUtterance.text = itemsToRead.map(item => item.textContent).join(", ");
-    speechSynthesis.speak(speechUtterance);
+    dv(itemsToRead);
+    //speechUtterance.text = itemsToRead.map(item => item.querySelector(".listText").textContent).join(", ");
+    //speechSynthesis.speak(speechUtterance);
 }
 
 // Fisher-Yates shuffle algorithm for randomizing array
@@ -141,7 +154,6 @@ function addNewEmptyItem() {
 // MutationObserver to detect changes in the empty list item
 const observer = new MutationObserver((mutationsList) => {
     for (const mutation of mutationsList) {
-        console.log(mutation);
         if (mutation.type === 'characterData' && mutation.target.parentElement.parentElement.classList.contains("empty"))
  {
             mutation.target.parentElement.parentElement.classList.remove("empty");
@@ -156,6 +168,8 @@ window.onload = (event) => {
   
 	observer.observe(listContainer, { childList: true, subtree: true, characterData: true });
 	// Start observing the list container
+    voices = speechSynthesis.getVoices().filter(item => item.lang.includes("en-"));
+    
 };
 
 

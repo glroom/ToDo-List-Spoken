@@ -8,10 +8,8 @@ body {
     align-items: flex-start;
     box-sizing: border-box;
     background-color:hsl(0deg 0% 8.89%);
-    color: #d0d0d0;
+    color: #a0a0a0;
 }
-
-
 
 .input-container {
     display: flex;
@@ -49,15 +47,12 @@ body {
     border-left-color: #7fffd485;
     z-index: 4 !important; 
     opacity: 100% !important;
+    box-shadow:#0000007a 0px 3px 8px;
+    color:#b0b0b0;
 }
 
 div {
     position:  relative;
-}
-
-#reminderTime:active, #toggleReminders:active, .listItem:active {
-    box-shadow:#7fffd482 0px 1px 4px;
-
 }
 
 #reminderTime:not(:empty):after, #reminderTime:empty:focus:after {
@@ -116,13 +111,13 @@ div {
 }
 
 .checked > .listCheck{
-    background-color: #505050;
+    background-color: #000000;
     box-shadow: none;
-    scale: 75%;
+    scale: 100%;
 }
 
 .checked > .listText{
-    text-decoration: line-through wavy 1px #656565e6;
+    text-decoration: line-through wavy 2px #000000;
     font-style:italic;
     padding: 0px 0.5em;
 }
@@ -154,12 +149,12 @@ div {
 }
 
 .listItem.empty > .listCheck, .listItem:has(.listText:empty) > .listCheck{
-    scale:75%
+    opacity:0%;
     
 }
 
-.listText:empty:before{
-    content: "stuff";
+.listText:not(.listText:focus):empty:before{
+    content: "...write stuff here";
     opacity: 50%;
     font-style: italic;
 }
@@ -183,7 +178,7 @@ div {
     cursor:pointer;
 }
 
-.listItem:not(.checked):has(div.listCheck:hover){
+.listItem:not(.checked):has(div.listCheck:hover) > .listText{
      text-shadow:0px 0px 4px #7fffd4;
     
 }
@@ -207,8 +202,8 @@ div {
 }
 
 .listX {
-    padding: 1px;
-    margin: 0px 1px 0px 0px;
+    padding: 0px;
+    margin: 0px 0px 1px 0px;
     color: black;
     height: max-content;
     display: block;
@@ -232,7 +227,7 @@ div {
 
 .listInfo{
     font-size: 9pt;
-    margin: 0px 2px 0px 0px;
+    margin: 0px px 0px 0px;
     width: max-content;
     height: max-content;
     text-wrap: nowrap;
