@@ -2,25 +2,29 @@ body {
     font-family: sans-serif;
     font-size: medium;
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-around;
     min-height: 100vh; /* Ensure the body takes up at least the full viewport height */
     margin: 0; /* Remove default body margin */
-    align-items: flex-start;
     box-sizing: border-box;
-    background-color:hsl(0deg 0% 8.89%);
+    background-color: #2c2c2c;
     color: #a0a0a0;
+    flex-wrap: nowrap;
+    align-items: center;
+    flex-direction: column;
 }
 
 .input-container {
     display: flex;
-    margin-bottom: 1em;
-    max-height: 2em;
+    padding: 10px;
+    max-height: 2rem;
     justify-content: flex-start;
     align-content: stretch;
     flex-direction: row;
     flex-wrap: wrap;
-    background-color: #161616;
-    padding: 3px;
+    background-color: #00000000;
+    /* padding: 3px; */
+    padding-right: 2px;
+    border-bottom: 2px solid black;
 }
 
 .input-container div,button{
@@ -28,7 +32,7 @@ body {
     padding: 10px;
     border: 2px solid #000000;
     margin-right: 1em;
-    max-height: 2em;
+    max-height: 1.5rem;
     min-width: 6em;
     display: inline-flex;
     box-sizing: border-box;
@@ -48,7 +52,7 @@ body {
     z-index: 4 !important; 
     opacity: 100% !important;
     box-shadow:#0000007a 0px 3px 8px;
-    color:#b0b0b0;
+    color:#ffffff;
 }
 
 div {
@@ -93,39 +97,48 @@ div {
     color: white;
     /* border: none; */
     cursor: pointer;
+    border-radius: 10px 0px 0px 10px;
+    border-left-width: 2px;
+    border-right-width: 5px;
+    transition: border-width ease-out 0.1s;
 }
 
 #toggleReminders.enabled {
     background-color: hsl(30.52deg 79.04% 54.59%);
+    border-left-width: 5px;
+    border-right-width: 2px;
+    color: black;
 }
 
 .listItem.checked{
     opacity:100%;
     color:#575757;
-    border: 1px dashed #000000e0;
-    margin: -1px 0px -1px 1em;
-    padding: 2px;
-    translate: 0 1px;
+    border-bottom: 1px dashed #000000e0;
+    margin: 0px 0px 0px 1em;
+    /* padding: 2px; */
+    /* translate: 0 1px; */
     background-color:#1a1a1a;
     z-index:0;
+    /* zoom: 90%; */
 }
 
 .checked > .listCheck{
     background-color: #000000;
     box-shadow: none;
     scale: 100%;
+    color: inherit;
 }
 
 .checked > .listText{
     text-decoration: line-through wavy 2px #000000;
     font-style:italic;
-    padding: 0px 0.5em;
 }
 
 .listItem{
     margin: 2px 0px 0px 0px;
     /* padding: 5px; */
-    border: 2px solid #000000;
+    border-left: 2px solid #000000;
+    border-bottom: 2px solid #0000001c;
     background-color:#272727;
     display: flex;
     transition: margin 0.1s linear, text-shadow 1s 0s linear(0.0 0%, 0.27 10.54%, 1 14.27%, 1.12 65.35%, 1.18 106.02%), max-height 0.2s ease-out, opacity 0.2s cubic-bezier(0.4, 0, 1, 1);
@@ -135,12 +148,15 @@ div {
     flex-wrap: nowrap;
     overflow: hidden;
     max-height: 250px;
-    box-sizing: border-box;
+    box-sizing: content-box;
+    border-top-left-radius: 10px 10px;
 }
 
  .listText:focus {
     outline:none;
     opacity: 100%;
+    border-bottom: 5px #ffffff;
+     background-color: black;
 }
 
 .listItem.empty, .listItem:has(.listText:empty){
@@ -166,16 +182,21 @@ div {
 }
 
 .listText{
-    display: inline;
-    padding: 0.5em;
+    /* display: inline; */
+    margin: 0 0.5rem  0 0.5em;
     width: 100%;
+    height: inherit;
     overflow-wrap: anywhere;
     animation: text-decoration 0.9s linear;
+    padding: .5rem .5rem;
+    align-self: stretch;
+    border-bottom-left-radius: 10px;
 }
 
 .listItem:not(:has(.listText:empty)) > div.listCheck:hover{
     background-color:#7fffd4;
     cursor:pointer;
+    color:black;
 }
 
 .listItem:not(.checked):has(div.listCheck:hover) > .listText{
@@ -190,8 +211,9 @@ div {
 }
 
 .listCheck{
-    width: .75em;
-    height: .75em;
+    width: 0.8rem;
+    height: .8rem;
+    /* max-width: .75rem; */
     background-color:#00000000;
     display: flex;
     margin-left: 0.5em;
@@ -199,6 +221,13 @@ div {
     flex-shrink: 0;
     box-shadow: 0px 0px 3px #000000;
     transition: background-color 0.1s linear;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    color: #00000000;
+    overflow: hidden;
+    /* align-content: center; */
+    /* max-height: .75rem; */
 }
 
 .listX {
@@ -227,12 +256,13 @@ div {
 
 .listInfo{
     font-size: 9pt;
-    margin: 0px px 0px 0px;
+    margin: 1px 1px 0px 0px;
     width: max-content;
     height: max-content;
     text-wrap: nowrap;
     display: block;
-    color:#515151
+    color:#515151;
+    letter-spacing: -.5px;
 }
 
 .listEnd{
@@ -243,7 +273,8 @@ div {
     align-items: flex-end;
     flex-direction: column;
     justify-content: space-between;
-    width: 5%;
+    width: max-content;
+    font-style: initial;
 }
 
 
@@ -253,6 +284,11 @@ div {
     max-width: 600px; /* Set a maximum width */
     margin: 2em;
     margin-top: 0;
+    height: 100vh;
+    background-color: hsl(0deg 0% 22.31%);
+    margin-bottom: 0;
+    background-repeat: no-repeat;
+    border-left: black solid 4px;
 }
 
 

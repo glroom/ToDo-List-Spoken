@@ -70,7 +70,7 @@ listContainer.onclick = function(e){
         
     else if(e.target.classList.contains("listX") && listItem != listContainer.lastChild){
         listItem.style.border = "none";
-        listItem.style.margin = "0px";
+        //listItem.style.margin = "0px";
         listItem.style.maxHeight = "0px";
         listItem.style.opacity = "0%";
         setTimeout((e)=>{
@@ -137,10 +137,10 @@ function addNewEmptyItem() {
     
     newItem.outerHTML = 
         `<div class="listItem empty init">
-            <div class ="listCheck"></div>
+            <div class ="listCheck">✔</div>
             <div class ="listText" contenteditable="true" spellcheck="false"></div>
             <div class="listEnd">
-                <div class ="listX">X</div>
+                <div class ="listX">⨉</div>
                 <div class ="listInfo"></div>
             </div>
         </div>`;
