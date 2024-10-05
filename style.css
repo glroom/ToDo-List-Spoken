@@ -1,33 +1,124 @@
 body {
     font-family: sans-serif;
+    font-size: medium;
+    display: flex;
+    justify-content: flex-start;
+    min-height: 100vh; /* Ensure the body takes up at least the full viewport height */
+    margin: 0; /* Remove default body margin */
+    align-items: flex-start;
 }
 
 .input-container {
     display: flex;
-    margin-bottom: 10px;
+    margin-bottom: 1em;
 }
 
-#reminderTime {
-    flex-grow: 1;
+.input-container div,span,button{
+    font-size: inherit;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 2px solid #ccc;
+    margin-right: 1em;
+    
+}
+
+*:not(button):focus{
+    box-shadow: 0px 0px 8px  #006eff57;
+    outline:none;
+}
+
+#reminderTime:not(:empty):after {
+    content: " minutes";
+    opacity: 50%;
+    font-size: small;
+    font-style: italic;
+}
+
+#reminderTime:empty:before {
+    content: "MINUTES";
+    font-size: medium;
+    font-style: italic;
+    font-weight:bolder;
+    flex-grow:0;
+}
+
+#reminderTime:empty{
+    background-color:red;
+    color:white;
+    padding:10px;
+    
 }
 
 #toggleReminders {
-    padding: 10px;
     background-color: #4CAF50;
     color: white;
     border: none;
     cursor: pointer;
 }
 
-.listItem {
-    margin-bottom: 5px;
-    padding: 10px;
-    border: 1px solid #ccc;
+#toggleReminders.enabled {
+    background-color: hsl(30.52deg 79.04% 54.59%);
 }
+
 
 .checked {
     text-decoration: line-through;
     font-size: 75%;
+}
+
+.listItem{
+    margin-bottom: 5px;
+    /* padding: 5px; */
+    border: 2px solid black;
+    justify-content: flex-start;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    align-items: center;
+}
+
+.listItem.empty > div{
+    opacity: 50%;
+    font-style: italic;
+}
+
+.listItem.empty:focus-within{
+    border: 2px solid black;
+    opacity: 100%;
+}
+.listItem.empty{
+   opacity: 60%;
+}
+
+.listText:empty:before{
+    content: "stuff";
+}
+
+.listText{
+    display:inline-block;
+    padding: 0.5em;
+    width: 100%;
+}
+
+.listCheck{
+    width: 1em;
+    height: 1em;
+    /* background-color:green; */
+    display: inline-block;
+    margin-left: 0.5em;
+    border: black 2px solid;
+    flex-shrink: 0;
+}
+
+
+
+
+
+
+.container {
+    /* Add styles for the container div */
+    width: 80%; /* Adjust the width as needed */
+    max-width: 600px; /* Set a maximum width */
+    margin: 2em;
+    margin-top: 0;
 }

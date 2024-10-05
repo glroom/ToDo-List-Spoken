@@ -5,13 +5,21 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="container">
     <h1>My To-Do List</h1>
     <div class="input-container">
-        <input type="number" id="reminderTime" placeholder="Reminder Time (minutes)" min="1">
+        <span contenteditable="true"  id="reminderTime">30</span>
+
         <button id="toggleReminders">Start Reminders</button>
+        
     </div>
+        
     <div id="listContainer">
-        <div class="listItem empty" contenteditable="true"></div>
+        <div class="listItem empty">
+            <div class ="listCheck"></div>
+            <div class ="listText" contenteditable="true" spellcheck="false"></div>
+        </div>
+    </div>
     </div>
 
     <script src="script.js"></script>
