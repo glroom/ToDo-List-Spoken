@@ -60,11 +60,15 @@ listContainer.onclick = function(e){
         && listItem.querySelector(".listText").textContent != ''){
         //if click the box and listItem not .empty and listText content not empty string
         
-        listItem.classList.contains("checked")?
-        listItem.classList.remove("checked"):
-        listItem.classList.add("checked");
         //is listItem .checked? if so remove checked or else add checked.
-        listItem.querySelector(".listInfo").textContent = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        if(listItem.classList.contains("checked")){
+            listItem.classList.remove("checked");
+            listItem.querySelector(".listInfo").textContent = "";
+        }
+        else{
+            listItem.classList.add("checked");
+            listItem.querySelector(".listInfo").textContent = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        }
         //add the time to listInfo
     }
         
