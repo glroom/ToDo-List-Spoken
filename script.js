@@ -4,7 +4,7 @@ const listContainer = document.getElementById("listContainer");
 
 let voices;
 let remindersInterval;
-let speechUtterance = new SpeechSynthesisUtterance();
+
 
 
 toggleRemindersButton.addEventListener("click", () => {
@@ -68,7 +68,7 @@ listContainer.onclick = function(e){
         else{
             listItem.classList.add("checked");
             listItem.querySelector(".listInfo").textContent = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-            dv([goodJobArray[Math.floor(Math.random(goodJobArray.length))]]);
+            readAloud([goodJobArray[Math.floor(Math.random()*goodJobArray.length)]]);
         }
         //add the time to listInfo
     }
@@ -90,42 +90,43 @@ listContainer.addEventListener("keydown", (e) => {
             }
 });
 
-function readAloud(text){
+async function readAloud(text){
+    let start = Date.now();
     if(voices.length == 0){
         voices = speechSynthesis.getVoices().filter(item => item.lang.includes("en-"));
     }
-    let promise = New Promise;
-    speechUtterance.voice = voices[Math.floor(Math.random()*voices.length)];
-    console.log(speechUtterance.voice.name);
-    speechUtterance.text = text;
-    speechSynthesis.speak(speechUtterance);
-    speechUtterance.addEventListener("end",(e)=>{promise.resolve()},{once:true;})
-    return promise;
-    }
+    return new Promise((resolve) => {
+        let speechUtterance = new SpeechSynthesisUtterance();
+        speechUtterance.voice = voices[Math.floor(Math.random()*voices.length)];
+        speechUtterance.text = text;
+        speechSynthesis.speak(speechUtterance);
+        
+        speechUtterance.addEventListener("start", (e) => {
+             console.log("it took ", Date.now() - start);
+        }, {once: true});
+        
+        speechUtterance.addEventListener("end", (e) => {
+            resolve();
+        }, {once: true});
+    });
+}
 
-
-
-
-array.pop().querySelector(".listText").textContent;
-        speechUtterance.onend = function(){dv(array)};
-
-
-function readToDoItems() {
+async function readToDoItems() {
     
     const items = listContainer.querySelectorAll(".listItem");
     const itemsArray = Array.from(items);
-    const emptyItem = itemsArray.pop(); // Remove the empty item from shuffling
-    
-    
+    const lastItem = itemsArray.pop(); // Remove the empty item from shuffling
     shuffleArray(itemsArray); // Shuffle the remaining items
 
     // Reorder the list items in the DOM
     itemsArray.forEach(item => listContainer.appendChild(item));
-    listContainer.appendChild(emptyItem); // Add the empty item back at the end
+    listContainer.appendChild(lastItem); // Add the empty item back at the end
 
     // Read only the non-checked items
-    const itemsToRead = itemsArray.filter(item => !item.classList.contains("checked"));
-    dv(itemsToRead);
+    const itemsToRead = Array.from(listContainer.querySelectorAll(".listItem:not(.empty,.checked) > .listText:not(:empty)"));
+    for (const item of itemsToRead) {
+        await readAloud(item.textContent);
+    }
     //speechUtterance.text = itemsToRead.map(item => item.querySelector(".listText").textContent).join(", ");
     //speechSynthesis.speak(speechUtterance);
 }
