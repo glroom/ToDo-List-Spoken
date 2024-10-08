@@ -42,6 +42,14 @@ body {
     background-color: #262626;
 }
 
+.container > h1{
+    padding: 0 0 0 10px;
+}
+
+#listContainer{
+    padding: 0 0 0 10px;
+}
+
 .init.empty{
     opacity:0% !important;
 }
@@ -310,6 +318,7 @@ div {
     margin-bottom: 0;
     background-repeat: no-repeat;
     border-left: black solid 4px;
+    padding: 0px 0px 0px 0px;
 }
 
 

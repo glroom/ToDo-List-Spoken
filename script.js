@@ -68,6 +68,7 @@ listContainer.onclick = function(e){
         else{
             listItem.classList.add("checked");
             listItem.querySelector(".listInfo").textContent = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+            dv([goodJobArray[Math.floor(Math.random(goodJobArray.length))]]);
         }
         //add the time to listInfo
     }
@@ -77,11 +78,7 @@ listContainer.onclick = function(e){
         //listItem.style.margin = "0px";
         listItem.style.maxHeight = "0px";
         listItem.style.opacity = "0%";
-        setTimeout((e)=>{
-           e.remove();
-            
-        },200,listItem);
-        
+        setTimeout((e)=>{e.remove();},200,listItem);
     }
     
 }
@@ -93,21 +90,28 @@ listContainer.addEventListener("keydown", (e) => {
             }
 });
 
-function dv(array){
-        if(array.length == 0){
-            return;
-        }
-        speechUtterance.voice = voices[Math.floor(Math.random()*voices.length)];
-        console.log(speechUtterance.voice.name);
-        speechUtterance.text = array.pop().querySelector(".listText").textContent;
-        speechUtterance.onend = function(){dv(array)};
-        speechSynthesis.speak(speechUtterance);
-    }
-
-function readToDoItems() {
+function readAloud(text){
     if(voices.length == 0){
         voices = speechSynthesis.getVoices().filter(item => item.lang.includes("en-"));
     }
+    let promise = New Promise;
+    speechUtterance.voice = voices[Math.floor(Math.random()*voices.length)];
+    console.log(speechUtterance.voice.name);
+    speechUtterance.text = text;
+    speechSynthesis.speak(speechUtterance);
+    speechUtterance.addEventListener("end",(e)=>{promise.resolve()},{once:true;})
+    return promise;
+    }
+
+
+
+
+array.pop().querySelector(".listText").textContent;
+        speechUtterance.onend = function(){dv(array)};
+
+
+function readToDoItems() {
+    
     const items = listContainer.querySelectorAll(".listItem");
     const itemsArray = Array.from(items);
     const emptyItem = itemsArray.pop(); // Remove the empty item from shuffling
@@ -176,6 +180,37 @@ window.onload = (event) => {
     
 };
 
-
+goodJobArray = [
+    "Good job!",
+    "Great jorb!",
+    "You did it!",
+    "You crushed it!",
+    "Totally awesome work!",
+    "You nailed it!",
+    "That's the spirit!",
+    "Excellent job!",
+    "Well done, champ!",
+    "Good things are happening!",
+    "Super proud of you!",
+    "Woohoo moment achieved!",
+    "You rock!",
+    "Bravo!",
+    "Fantastic effort!",
+    "You're a star!",
+    "Keep shining!",
+    "You're on fire!",
+    "That's amazing!",
+    "Huge congratulations!",
+    "Your hard work paid off!",
+    "You should be proud of yourself!",
+    "You did great!",
+    "Keep it up!",
+    "Superstar alert!",
+    "You're unstoppable!",
+    "Well done, you!",
+    "That was incredible!",
+    "Awesome job!",
+    "You're a winner!"
+];
 
 
