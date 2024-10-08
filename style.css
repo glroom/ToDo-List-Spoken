@@ -47,16 +47,27 @@ body {
 }
 
 #listContainer{
-    padding: 0 0 0 10px;
+    /* padding: 0 0 0 10px; */
 }
 
 .init.empty{
     opacity:0% !important;
 }
 
-.input-container div:hover, .input-container div:focus, button:hover, .listItem:focus-within, .listItem:hover{
+.listItem:focus-within, .listItem:hover{
     /*box-shadow:#7fffd482 0px 1px 4px;*/
     border-left-color: #7fffd485;
+    border-left-width: 2px;
+    z-index: 4 !important; 
+    opacity: 100% !important;
+    box-shadow:#0000007a 0px 3px 8px;
+    color:#ffffff;
+    margin-left: 2px;
+}
+
+.input-container div:hover, .input-container div:focus, button:hover{
+    /*box-shadow:#7fffd482 0px 1px 4px;*/
+    border-left-width: 2px;
     z-index: 4 !important; 
     opacity: 100% !important;
     box-shadow:#0000007a 0px 3px 8px;
@@ -153,8 +164,8 @@ div {
 
 .listItem{
     /* margin: 2px 0px 0px 0px; */
-    /* padding: 5px; */
-    border-left: 2px solid #000000;
+    margin: 0 0 0 10px;
+    border-left: 1px solid #000000;
     border-bottom: 2px solid #00000033;
     background-color:#272727;
     display: flex;
@@ -167,6 +178,7 @@ div {
     max-height: 250px;
     box-sizing: content-box;
     border-top-left-radius: 10px 10px;
+    border-bottom-left-radius: 10px 10px;
 }
 
  .listText:focus {

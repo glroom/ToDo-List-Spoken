@@ -13,6 +13,8 @@ toggleRemindersButton.addEventListener("click", () => {
         remindersInterval = null;
         toggleRemindersButton.textContent = "Start Reminders";
         toggleRemindersButton.classList.remove("enabled");
+        if(speechSynthesis.speaking){speechSynthesis.cancel();}
+        
     } 
     else {
         if(reminderTimeInput.textContent == '' || isNaN(parseInt(reminderTimeInput.textContent))){
@@ -21,6 +23,7 @@ toggleRemindersButton.addEventListener("click", () => {
         
         const reminderTime = parseInt(reminderTimeInput.textContent, 10) * 60 * 1000; // Convert minutes to milliseconds
         remindersInterval = setInterval(readToDoItems, reminderTime);
+        readToDoItems();
         toggleRemindersButton.textContent = "Stop Reminders";
         toggleRemindersButton.classList.add("enabled");
     }
@@ -90,29 +93,17 @@ listContainer.addEventListener("keydown", (e) => {
             }
 });
 
-async function readAloud(text){
-    let start = Date.now();
+function readAloud(text){
     if(voices.length == 0){
         voices = speechSynthesis.getVoices().filter(item => item.lang.includes("en-"));
     }
-    return new Promise((resolve) => {
-        let speechUtterance = new SpeechSynthesisUtterance();
-        speechUtterance.voice = voices[Math.floor(Math.random()*voices.length)];
-        speechUtterance.text = text;
-        speechSynthesis.speak(speechUtterance);
-        
-        speechUtterance.addEventListener("start", (e) => {
-             console.log("it took ", Date.now() - start);
-        }, {once: true});
-        
-        speechUtterance.addEventListener("end", (e) => {
-            resolve();
-        }, {once: true});
-    });
+    let speechUtterance = new SpeechSynthesisUtterance();
+    speechUtterance.voice = voices[Math.floor(Math.random()*voices.length)];
+    speechUtterance.text = text;
+    speechSynthesis.speak(speechUtterance);
 }
 
-async function readToDoItems() {
-    
+function readToDoItems() {
     const items = listContainer.querySelectorAll(".listItem");
     const itemsArray = Array.from(items);
     const lastItem = itemsArray.pop(); // Remove the empty item from shuffling
@@ -125,10 +116,8 @@ async function readToDoItems() {
     // Read only the non-checked items
     const itemsToRead = Array.from(listContainer.querySelectorAll(".listItem:not(.empty,.checked) > .listText:not(:empty)"));
     for (const item of itemsToRead) {
-        await readAloud(item.textContent);
+        readAloud(item.textContent);
     }
-    //speechUtterance.text = itemsToRead.map(item => item.querySelector(".listText").textContent).join(", ");
-    //speechSynthesis.speak(speechUtterance);
 }
 
 // Fisher-Yates shuffle algorithm for randomizing array
@@ -173,13 +162,14 @@ const observer = new MutationObserver((mutationsList) => {
 });
 
 window.onload = (event) => {
-	
-  
 	observer.observe(listContainer, { childList: true, subtree: true, characterData: true });
 	// Start observing the list container
-    voices = speechSynthesis.getVoices().filter(item => item.lang.includes("en-"));
-    
 };
+
+speechSynthesis.addEventListener("voiceschanged", (event) => {
+    voices = speechSynthesis.getVoices().filter(item => item.lang.includes("en-"));
+    console.log("VOICES!!",voices);
+});
 
 goodJobArray = [
     "Good job!",
