@@ -1,16 +1,25 @@
 const reminderTimeInput = document.getElementById("reminderTime");
 const toggleRemindersButton = document.getElementById("toggleReminders");
 const listContainer = document.getElementById("listContainer");
+const volumeSlider = document.getElementById("volumeSlider");
+const volumeSpan = document.getElementById("volumeSpan");
+const voicesButton = document.getElementById("voicesButton");
+const voicesDialog = document.getElementById("voicesDialog");
+const voicesDoneButton = document.getElementById("voicesDoneButton");
+const voiceCheckboxTemplate = document.getElementById("voiceCheckboxTemplate");
 
-let voices;
-let remindersInterval;
-
-
+let voices = null;
+let voicesToUse = new Set;
+let reminderTimeoutID;
+let reminderTime;
+let reminderStartTime = null;
+let volume = 0.5;
 
 toggleRemindersButton.addEventListener("click", () => {
-    if (remindersInterval) {
-        clearInterval(remindersInterval);
-        remindersInterval = null;
+    if (reminderTimeoutID) {
+        clearTimeout(reminderTimeoutID);
+        reminderTimeoutID = null;
+		reminderStartTime = null;
         toggleRemindersButton.textContent = "Start Reminders";
         toggleRemindersButton.classList.remove("enabled");
         if(speechSynthesis.speaking){speechSynthesis.cancel();}
@@ -21,8 +30,7 @@ toggleRemindersButton.addEventListener("click", () => {
             reminderTimeInput.textContent = '30';
         }
         
-        const reminderTime = parseInt(reminderTimeInput.textContent, 10) * 60 * 1000; // Convert minutes to milliseconds
-        remindersInterval = setInterval(readToDoItems, reminderTime);
+        reminderTime = parseInt(reminderTimeInput.textContent, 10) * 60 * 1000; // Convert minutes to milliseconds
         readToDoItems();
         toggleRemindersButton.textContent = "Stop Reminders";
         toggleRemindersButton.classList.add("enabled");
@@ -30,14 +38,34 @@ toggleRemindersButton.addEventListener("click", () => {
 });
 
 reminderTimeInput.oninput =  function(e){
-    if(e.inputType != "insertText" || !isNaN(parseInt(e.data))){
+	console.log(`timeInput event`,e);
+	
+    if(e.inputType != "insertText" || !isNaN(parseInt(e.data))){ //if the input isn't inserting or is a number
+		reminderTime = parseInt(this.textContent, 10) * 60 * 1000;
+		if(reminderStartTime !=null ){
+			clearTimeout(reminderTimeoutID);
+			setTimeout(()=>{
+				
+				let timeElapsed = Date.now() - reminderStartTime;
+				clearTimeout(reminderTimeoutID);
+				reminderTimeoutID = setTimeout(readToDoItems,Math.max(0,reminderTime - timeElapsed) + 500);
+				console.log(`modified reminderTIme: ${Math.max(0,reminderTime - timeElapsed) + 500}`);
+			},5000);
+			
+		}
+	
         return;
     }
+	
+	/* if(parsethis.textContent)){
+        return;
+    }  */
+	
     const selection = window.getSelection();
     const range = selection.getRangeAt(0); // Get the current selection range
     // Store the current caret position relative to the start of the selection
     let caretOffset = range.startOffset;
-    // Replace the text content of the span
+    // delete added stuff
     this.textContent = this.textContent.slice(0,this.textContent.length-1);
     // Restore the caret position
     const newRange = document.createRange();
@@ -50,9 +78,18 @@ reminderTimeInput.oninput =  function(e){
     newRange.collapse(true);
     selection.removeAllRanges();
     selection.addRange(newRange);
+	
+	
+	
+	
+	
 };
 
-reminderTimeInput.onblur = function(){if(this.textContent.length ==0){this.textContent = "1"}};
+reminderTimeInput.onblur = function(){
+	if(this.textContent.length ==0){
+		this.textContent = "1"
+		reminderTime = parseInt(this.textContent, 10) * 60 * 1000;
+}};
 
 listContainer.onclick = function(e){
     console.log(e);
@@ -93,13 +130,63 @@ listContainer.addEventListener("keydown", (e) => {
             }
 });
 
+voicesDialog.onclick = function(e){
+	console.log(e);
+	const fieldsetDiv =document.getElementById("fieldsetDiv");
+	if(e.target.classList.contains('voicePreviewSpan')){
+		const voiceIndex = e.target.closest('div').attributes.voiceIndex.value;
+
+		let speechUtterance = new SpeechSynthesisUtterance();
+	    speechUtterance.voice = voices[parseInt(voiceIndex)].voice;
+	    speechUtterance.text = "Heat from fire.";
+	    speechUtterance.volume = volume;
+	    speechSynthesis.speak(speechUtterance);
+	}
+
+	else if (e.target.id == 'voicesSelectAll'){
+		Array.from(fieldsetDiv.querySelectorAll("input")).forEach(e=>e.checked = true);
+		voices.forEach(e=>e.enabled = true);
+		return;
+	}
+
+	else if (e.target.id == 'voicesSelectNone'){
+		Array.from(fieldsetDiv.querySelectorAll("input")).forEach(e=>e.checked = false);
+		voices.forEach(e=>e.enabled = false);
+		return;
+	}
+
+	voices[e.target.closest('div').attributes.voiceIndex.value].enabled = e.target.checked;
+	
+}
+
+volumeSlider.oninput = function(){
+	volume = this.value;
+	
+	volumeSpan.textContent=['🔈','🔉','🔊'][Math.floor(this.value*3)];
+}
+
+voicesButton.onclick = function(){
+	voicesDialog.show();
+	
+}
+
+voicesDoneButton.onclick = function(){
+	voicesDialog.close();
+
+	
+}
+
+
 function readAloud(text){
-    if(voices.length == 0){
-        voices = speechSynthesis.getVoices().filter(item => item.lang.includes("en-"));
-    }
+    
     let speechUtterance = new SpeechSynthesisUtterance();
-    speechUtterance.voice = voices[Math.floor(Math.random()*voices.length)];
+	const enabledVoices = voices.filter(e=>e.enabled);
+	if(enabledVoices.length == 0){
+		enabledVoices.push(voices[0]);
+	}
+    speechUtterance.voice =  enabledVoices[Math.floor(Math.random()*enabledVoices.length)].voice;
     speechUtterance.text = text;
+    speechUtterance.volume = volume;
     speechSynthesis.speak(speechUtterance);
 }
 
@@ -118,6 +205,9 @@ function readToDoItems() {
     for (const item of itemsToRead) {
         readAloud(item.textContent);
     }
+	
+	reminderTimeoutID = setTimeout(readToDoItems,reminderTime);
+	reminderStartTime = Date.now();
 }
 
 // Fisher-Yates shuffle algorithm for randomizing array
@@ -167,8 +257,25 @@ window.onload = (event) => {
 };
 
 speechSynthesis.addEventListener("voiceschanged", (event) => {
-    voices = speechSynthesis.getVoices().filter(item => item.lang.includes("en-"));
+	if(voices != null){
+		return;
+	}
+    voices = speechSynthesis.getVoices()
+		.filter(item => item.lang.includes("en-"))
+		.map((e)=>{return{voice:e,enabled:true}});
+	
     console.log("VOICES!!",voices);
+
+	voices.forEach((e,i,a)=>{
+		
+		const clo = voiceCheckboxTemplate.content.cloneNode(true);
+		clo.querySelector("div").setAttribute("voiceIndex", i);
+		clo.querySelector("label").appendChild(document.createTextNode(e.voice.name));
+		clo.querySelector("input").checked = true;
+		voicesDialog.querySelector("#fieldsetDiv").appendChild(clo);
+	});
+
+	
 });
 
 goodJobArray = [

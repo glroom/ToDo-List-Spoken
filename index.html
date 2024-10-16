@@ -8,10 +8,27 @@
     <div class="container">
     <h1>My To-Do List</h1>
     <div class="input-container">
-        <div contenteditable="true"  id="reminderTime">30</div>
+        <div contenteditable="true" class="inputDiv"id="reminderTime">30</div>
 
         <button id="toggleReminders">Start Reminders</button>
-        
+		<div id="volume" class="inputDiv"><jj-slider id="volumeSlider" width="100px" height ="100%"></jj-slider><span id="volumeSpan"style="min-width:1.5rem;">🔉</span></div>
+        <button id="voicesButton">Voices</button>
+        <dialog id="voicesDialog">
+            
+            <fieldset>
+            
+                 
+                 <legend>Voices - click 🗣 to preview</legend>
+                 <div>
+                 <button id='voicesSelectAll'>Select All</button><button id='voicesSelectNone'>Select None</button><br/></div>
+             <div id= 'fieldsetDiv'style="overflow-y: scroll; margin: 5px 0px;">  
+             
+            </div>
+                <button id="voicesDoneButton">Done</button>
+                </fieldset>
+            
+            
+        </dialog>
     </div>
         
     <div id="listContainer">
@@ -26,6 +43,16 @@
     </div>
     </div>
 
+    <template id="voiceCheckboxTemplate">
+        <div voiceIndex="0">
+        
+        <label><input type="checkbox" /></label> <span class='voicePreviewSpan'></span>
+        <br />
+        </div>
+    </template>
+	<script src="jj-slider.js"></script>
     <script src="script.js"></script>
+
+    
 </body>
 </html>

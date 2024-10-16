@@ -13,11 +13,13 @@ body {
     flex-direction: column;
 }
 
+
+
 .input-container {
     display: flex;
     padding: 10px;
     max-height: 2rem;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-content: stretch;
     flex-direction: row;
     flex-wrap: wrap;
@@ -25,9 +27,11 @@ body {
     /* padding: 3px; */
     padding-right: 2px;
     border-bottom: 2px solid black;
+    align-items: stretch;
+    justify-items: flex-end;
 }
 
-.input-container div,button{
+.input-container .inputDiv,button{
     font-size: inherit;
     /* padding: 2px; */
     border: 2px solid #000000;
@@ -40,6 +44,7 @@ body {
     justify-content: space-evenly;
     flex-direction: row;
     background-color: #262626;
+    color: inherit;
 }
 
 .container > h1{
@@ -65,7 +70,7 @@ body {
     margin-left: 2px;
 }
 
-.input-container div:hover, .input-container div:focus, button:hover{
+.input-container .inputDiv:hover, .input-container .inputDiv:focus, button:hover{
     /*box-shadow:#7fffd482 0px 1px 4px;*/
     border-left-width: 2px;
     z-index: 4 !important; 
@@ -333,4 +338,69 @@ div {
     padding: 0px 0px 0px 0px;
 }
 
+#volume{
+   display: inline-flex;
+   flex-direction: row;
+   flex-wrap: nowrap;
+   align-items: center;
+   /* margin-right:0; */
+}
+
+#voicesDialog{
+    position: fixed;
+    z-index: 10;
+    place-self: center;
+    /* right: 0px; */
+    margin: 0px;
+    width: 80%;
+    max-width:40rem;
+    /* left: 0px; */
+    background-color: #6666666b;
+    border: 2px black solid;
+    top: 10px;
+    /* overflow: scroll; */
+    max-height: 80%;
+}
+
+ #voicesDialog[open]{
+    display:inline-flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    color: inherit;
+    max-height: 80%;
+    padding: 4px;
+    scrollbar-color:#000 #333;
+    backdrop-filter: blur(10px);
+    height: 70%;
+}
+
+#voicesDialog  fieldset{
+    padding:10px;
+    max-height: 96%;
+    display:flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+}
+
+#voicesDialog > div{
+    padding:4px;
+    margin-bottom:8px;
+    border: 1px black solid;
+}
+
+#voicesDialog[open] fieldset div >label:hover{
+    color:white;
+}
+.voicePreviewSpan:after{
+   content:"🗣..."
+
+}
+.voicePreviewSpan:hover{
+    color:aquamarine;
+    cursor:pointer;
+}
+
+.voicePreviewSpan:hover:after{
+    content:"🗣⁉";
+}
 
